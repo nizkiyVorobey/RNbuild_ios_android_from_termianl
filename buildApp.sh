@@ -38,7 +38,7 @@ function linuxPrompt() {
 function macPrompt() {
   osascript <<EOT
     tell app "System Events"
-     button returned of (display dialog "Build $targetPlatform $buildType on $scheme!?"  buttons {"No", "Yes"})
+     button returned of (display dialog "Build $targetPlatform $buildType on $scheme!?" with icon caution buttons {"No", "Yes"})
     end tell
 EOT
 }

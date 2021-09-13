@@ -2,19 +2,20 @@
 
 # $1 - Scheme (staging/production)
 $targetScheme
+projectName="ConnectMobile"
 
 if [ $1 == "prod" ]; then
-  targetScheme="Production"
-elif [ $1 == "stage" ]; then
-  targetScheme="Staging"
+  targetScheme="AppProduction"
+elif [ $1 == "staging" ]; then
+  targetScheme="AppStaging"
+elif [ $1 == "dev" ]; then
+  targetScheme="AppDevelopment"
 else
-  echo undefined scheme
+  echo $1 is invalid scheme
   exit
 fi
 
-xcodebuild clean archive -workspace ios/interpreter4.xcworkspace -scheme $targetScheme -archivePath /Users/senyasenya/Library/Developer/Xcode/Archives/interpreter4.xcarchive | xcpretty
-
-open ${HOME}/Library/Developer/Xcode/Archives/interpreter4.xcarchive
+xcodebuild clean archive -workspace ios/$projectName.xcworkspace -scheme $targetScheme -archivePath /Users/senyasenya/Library/Developer/Xcode/Archives/$projectName.xcarchive | xcpretty && open ${HOME}/Library/Developer/Xcode/Archives/$projectName.xcarchive
 
 
 # npx react-native run-ios --simulator="iPhone 11 Pro Max" --configuration Debug --scheme Production
