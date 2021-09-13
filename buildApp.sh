@@ -7,6 +7,7 @@
 targetPlatform=$1
 scheme=$2
 buildType=$3
+question="Build $targetPlatform $buildType on $scheme!?"
 
 $platform
 $confirmResult
@@ -30,46 +31,48 @@ else
 fi
 
 function linuxPrompt() {
-  zenity --question --text="Build $targetPlatform $buildType on $scheme!?"
+  zenity --question --text="$question"
 }
 
 function macPrompt() {
   osascript <<EOT
     tell app "System Events"
-     button returned of (display dialog "Build $targetPlatform $buildType on $scheme!?" with icon caution buttons {"No", "Yes"})
+     button returned of (display dialog "$question" with icon caution buttons {"No", "Yes"})
     end tell
 EOT
 }
 
-if [ "$platform" == "linux" ]; then
+if [[ "$platform" == "linux" ]]; then
   value="$(linuxPrompt)"
   if [ $? -eq 0 ]; then
     confirmResult="Yes"
   else
     confirmResult="No"
   fi
-elif [ "$platform" == "mac" ]; then
+elif [[ "$platform" == "mac" ]]; then
   confirmResult="$(macPrompt)"
 else
   echo Other plaforms
-  read -p "Do you wish to install this program?" yn
+  read -p "$question (Yes/No): " yn
   case $yn in
-  [Yy]*) confirmResult="Yes" break ;;
+  [Yy]*) confirmResult="Yes"; break;;
   [Nn]*) exit ;;
   *) echo "Please answer yes or no." ;;
   esac
 fi
 
-if [ $confirmResult == "Yes" ]; then
+if [[ $confirmResult == "Yes" ]]; then
   if [[ $targetPlatform == "android" ]]; then
     echo "build Android $buildType on $scheme"
     bash buildAndroid.sh $buildType $scheme
   elif [[ $targetPlatform == "ios" ]]; then
     echo "build IOS on $scheme"
     bash buildIOS.sh $scheme
+  else
+    echo invalid plaftom
   fi
 elif
-  [ $confirmResult == "No" ]
+  [[ $confirmResult == "No" ]]
 then
   exit
 else
