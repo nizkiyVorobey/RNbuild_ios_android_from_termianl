@@ -29,10 +29,8 @@ else
   platform="unknown"
 fi
 
-# echo $platform
-
 function linuxPrompt() {
-  zenity --question --text="Do you wish to continue/?"
+  zenity --question --text="Build $targetPlatform $buildType on $scheme!?"
 }
 
 function macPrompt() {
@@ -54,30 +52,27 @@ elif [ "$platform" == "mac" ]; then
   confirmResult="$(macPrompt)"
 else
   echo Other plaforms
-
   read -p "Do you wish to install this program?" yn
   case $yn in
   [Yy]*) confirmResult="Yes" break ;;
   [Nn]*) exit ;;
   *) echo "Please answer yes or no." ;;
   esac
-
 fi
 
-# echo $confirmResult
-
 if [ $confirmResult == "Yes" ]; then
-  if [ $targetPlatform == "android" ]; then
+  if [[ $targetPlatform == "android" ]]; then
     echo "build Android $buildType on $scheme"
     bash buildAndroid.sh $buildType $scheme
-  elif [ $targetPlatform == "ios" ]; then
+  elif [[ $targetPlatform == "ios" ]]; then
     echo "build IOS on $scheme"
     bash buildIOS.sh $scheme
   fi
 elif
   [ $confirmResult == "No" ]
 then
-  echo "result is NO"
+  exit
 else
   echo "result in undefined"
+  exit
 fi
