@@ -15,7 +15,9 @@ else
   exit
 fi
 
-xcodebuild clean archive -workspace ios/$projectName.xcworkspace -scheme $targetScheme -archivePath /Users/senyasenya/Library/Developer/Xcode/Archives/$projectName.xcarchive | xcpretty && open ${HOME}/Library/Developer/Xcode/Archives/$projectName.xcarchive
+cd ./ios && xcrun agvtool next-version -all && cd ../ # increment build
+
+xcodebuild clean archive -workspace ios/$projectName.xcworkspace -scheme $targetScheme -archivePath /Users/$USER/Library/Developer/Xcode/Archives/$projectName.xcarchive | xcpretty && open ${HOME}/Library/Developer/Xcode/Archives/$projectName.xcarchive
 
 
 # npx react-native run-ios --simulator="iPhone 11 Pro Max" --configuration Debug --scheme Production

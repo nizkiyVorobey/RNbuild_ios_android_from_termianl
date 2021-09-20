@@ -7,7 +7,16 @@
 targetPlatform=$1
 scheme=$2
 buildType=$3
-question="Build $targetPlatform $buildType on $scheme!?"
+appName="ConnectMobile"
+
+question="Build $appName $targetPlatform $buildType on $scheme!?"
+
+currentBranch="$(git branch --show-current)"
+$incorrectBranchMessage
+
+if [[ "$currentBranch" != "master" ]] && [[ "$currentBranch" != "stage" ]]; then
+  incorrectBranchMessage="Братик, ты сейчас на ветке $currentBranch, а допустимые ветки для билда master или stage"
+fi
 
 $platform
 $confirmResult
@@ -37,7 +46,7 @@ function linuxPrompt() {
 function macPrompt() {
   osascript <<EOT
     tell app "System Events"
-     button returned of (display dialog "$question" with icon caution buttons {"No", "Yes"})
+     button returned of (display dialog "$question \n\n$incorrectBranchMessage" with title "$appName" with icon caution buttons {"No", "Yes"}) 
     end tell
 EOT
 }
@@ -55,7 +64,10 @@ else
   echo Other plaforms
   read -p "$question (Yes/No): " yn
   case $yn in
-  [Yy]*) confirmResult="Yes"; break;;
+  [Yy]*)
+    confirmResult="Yes"
+    break
+    ;;
   [Nn]*) exit ;;
   *) echo "Please answer yes or no." ;;
   esac
